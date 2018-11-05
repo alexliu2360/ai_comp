@@ -4,6 +4,7 @@ import os
 config_path = os.path.abspath(os.path.dirname(__file__)) + '/'
 print(config_path)  # Fine-grained_Sentiment_Analysis/code/AI-Comp-master/code
 stopwords_path = config_path
+stopwords_fn = 'stopwords.txt'
 
 original_data_path = config_path + '../data/original/'
 original_train_fn = 'sentiment_analysis_trainingset.csv'
