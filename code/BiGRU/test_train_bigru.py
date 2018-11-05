@@ -134,13 +134,13 @@ class BiGRU:
         self.word2vec_chars_file = word2vec_chars_path + word2vec_chars_fn
 
     def _prepare_data(self):
-        self.data = pd.read_csv(self.preprocess_train_data_file)
-        self.validation = pd.read_csv(self.preprocess_validate_data_file)
-        self.data["content"] = self.data.apply(lambda x: eval(x[1]), axis=1)
-        self.validation["content"] = self.validation.apply(lambda x: eval(x[1]), axis=1)
+        self.train_data = pd.read_csv(self.preprocess_train_data_file)
+        self.validation_data = pd.read_csv(self.preprocess_validate_data_file)
+        self.train_data["content"] = self.train_data.apply(lambda x: eval(x[1]), axis=1)
+        self.validation_data["content"] = self.validation_data.apply(lambda x: eval(x[1]), axis=1)
 
         tokenizer = text.Tokenizer(num_words=None)
-        tokenizer.fit_on_texts(self.data["content"].values)
+        tokenizer.fit_on_texts(self.train_data["content"].values)
         with open('tokenizer_char.pickle', 'wb') as handle:
             pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -150,6 +150,15 @@ class BiGRU:
                                                      unicode_errors='ignore')
         self.embeddings_matrix = np.zeros((len(self.word_index) + 1, w2_model.vector_size))
 
+        # 将每个词对应成相应的词向量 横坐标是词索引，纵坐标是词向量  两个构成词向量矩阵
+        '''
+        embeddings_matrix:
+        0: [0.38, 0.45, ....]
+        1: [0.23, 0.69, ....]
+        2: [0.72, 0.25, ....]
+        3: [0.05, 0.91, ....]
+        ...
+        '''
         for word, i in self.word_index.items():
             if word in w2_model:
                 embedding_vector = w2_model[word]
@@ -158,8 +167,8 @@ class BiGRU:
             if embedding_vector is not None:
                 self.embeddings_matrix[i] = embedding_vector
 
-        X_train = self.data["content"].values
-        X_validation = self.validation["content"].values
+        X_train = self.train_data["content"].values
+        X_validation = self.validation_data["content"].values
 
         list_tokenized_train = tokenizer.texts_to_sequences(X_train)
         self.input_train = sequence.pad_sequences(list_tokenized_train, maxlen=self.maxlen)
@@ -170,8 +179,8 @@ class BiGRU:
     def train(self, model_index, batch_size=128, epochs=10):
         # 模型索引 其实就是20个大类别
         model_index = int(model_index)
-        y_train = pd.get_dummies(self.data[column_list[model_index]])[[-2, -1, 0, 1]].values
-        y_val = pd.get_dummies(self.validation[column_list[model_index]])[[-2, -1, 0, 1]].values
+        y_train = pd.get_dummies(self.train_data[column_list[model_index]])[[-2, -1, 0, 1]].values
+        y_val = pd.get_dummies(self.validation_data[column_list[model_index]])[[-2, -1, 0, 1]].values
 
         print("model" + str(model_index))
         model1 = TextClassifier().model(self.embeddings_matrix, self.maxlen, self.word_index, 4)
