@@ -95,13 +95,12 @@ def get_char(arr):
 
 def make_stopwords():
     # 生成停用词列表
-    with open(stopwords_file, 'r', encoding='utf-8') as f:
+    with open(stopwords_file, 'r', encoding='utf8') as f:
         for line in f.readlines():
             line = line.strip()
             line = line.strip('\n')
             line = line.strip('\r')
             stop_words.append(line)
-    print(stop_words)
     return stop_words
 
 
@@ -132,13 +131,13 @@ def preprocess_text(input_file, output_file):
 
 def make_word2cev_model(train_data):
     line_sent = []
-    for s in train_data['content']:
+    for s in train_data:
         line_sent.append(s)
     word2vec_model = Word2Vec(line_sent, size=300, window=10, min_count=1, workers=4, iter=15)
     word2vec_model.wv.save_word2vec_format(word2vec_file, binary=True)
 
 
-def main():
+def preprocess():
     global stop_words
     stop_words = make_stopwords()
     print('preprocess_text train_data...')
@@ -147,7 +146,27 @@ def main():
     preprocess_text(validate_data_file, preprocess_validate_date_file)
     print('preprocess_text train_data...')
     preprocess_text(testa_data_file, preprocess_test_date_file)
-    print('make w2v...')
-    make_word2cev_model(train_data_content)
+    # print('make w2v...')
+    # make_word2cev_model(train_data_content)
 
 
+# train_data = pd.read_csv(train_data_file)
+# train_data['content'] = train_data['content'].map(lambda x: filter_map(x))
+# train_data['content'] = train_data['content'].map(lambda x: get_char(x))
+# train_data.to_csv(preprocess_train_data_file, index=None)
+
+# line_sent = []
+# for s in train_data['content']:
+#     line_sent.append(s)
+# word2vec_model = Word2Vec(line_sent, size=100, window=10, min_count=1, workers=4, iter=15)
+# word2vec_model.wv.save_word2vec_format(word2vec_file, binary=True)
+
+# validation = pd.read_csv(validate_data_file)
+# validation.content = validation.content.map(lambda x: filter_map(x))
+# validation.content = validation.content.map(lambda x: get_char(x))
+# validation.to_csv(preprocess_validate_date_file, index=None)
+#
+# test = pd.read_csv(testa_data_file)
+# test.content = test.content.map(lambda x: filter_map(x))
+# test.content = test.content.map(lambda x: get_char(x))
+# test.to_csv(preprocess_test_date_file, index=None)
