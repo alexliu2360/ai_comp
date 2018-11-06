@@ -73,7 +73,8 @@ class BigruFasttextW2v:
             pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         self.word_index = tokenizer.word_index
-        embedding_matrix_file = bigru_embeddings_matrix_path + bigru_embeddings_matrix_fn + bigru_embeddings_matrix_suffix
+        embedding_matrix_file = bigru_embeddings_matrix_path + bigru_embeddings_matrix_fn
+        print('make or load embedding_matrix...')
         if not os.path.exists(embedding_matrix_file):
             print('make embedding_matrix...')
             wiki_zh_vec = text.embedding.create('fasttext', pretrained_file_name='wiki.zh.vec')
@@ -84,7 +85,7 @@ class BigruFasttextW2v:
             np.save(embedding_matrix_file, self.embeddings_matrix)
         else:
             print('load embedding_matrix...')
-            self.embeddings_matrix = np.load(embedding_matrix_file)
+            self.embeddings_matrix = np.load(embedding_matrix_file+'.npy')
 
         X_train = self.data["content"].values
         X_validation = self.validation["content"].values
