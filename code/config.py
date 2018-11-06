@@ -41,6 +41,10 @@ capslue_models_path = config_path + "models/capslue/"
 bigru_models_path = config_path + "models/bigru/"
 rcnn_models_path = config_path + "models/rcnn/"
 
+bigru_embeddings_matrix_path = config_path+'BiGRU/'
+bigru_embeddings_matrix_fn = 'bigru_embeddings_matrix'
+bigru_embeddings_matrix_suffix = 'npy'
+
 word2vec_chars_path = config_path + "../data/word2vec_chars/"
 word2vec_chars_fn = "chars.vector"
 
