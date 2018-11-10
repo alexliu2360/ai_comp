@@ -34,6 +34,7 @@ preprocess_validate_data_fn = "validation_char.csv"
 preprocess_testa_data_fn = "test_char.csv"
 
 test_train_data_file = config_path + '../data/test/test_train_10.csv'
+test_original_train_data_10_file = config_path + '../data/test/original_train_10.csv'
 test_validate_data_file = config_path + '../data/test/test_validate_10.csv'
 
 
@@ -47,6 +48,8 @@ bigru_embeddings_matrix_suffix = 'npy'
 
 word2vec_chars_path = config_path + "../data/word2vec_chars/"
 word2vec_chars_fn = "chars.vector"
+own_word2vec_fn = "own_chars.vector"
+own_withsw_char_word2vec_fn = "own_withsw_char.vector"
 
 tokenizer_bigru_path = config_path + 'BiGRU/'
 tokenizer_bigru_fn = 'tokenizer_char.pickle'
