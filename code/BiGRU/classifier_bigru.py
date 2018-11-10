@@ -33,4 +33,5 @@ class TextClassifier():
         model.compile(
             loss='categorical_crossentropy',
             optimizer=adam)
+        print(model.summary())
         return model
